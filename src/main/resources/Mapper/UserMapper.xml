@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.just.myproject.Mapper.UserMapper" >   <!--指定mapper位置-->
+    <update id="resetInfo" parameterType="com.just.myproject.Entity.User">
+        update user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="nickname!=null">nickname=#{nickname},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="email!=null">email=#{email},</if>
+            <if test="password!=null">password=#{password},</if>
+            <if test="headimg!=null">head_img=#{headimg}</if>
+        </trim>
+        WHERE worknum=#{worknum}
+    </update>
+
+    <resultMap id="recordResultMap" type="java.util.Map">
+        <id property="worknum" column="worknum" />
+        <result property="cardReturn" column="card_return"/>
+        <result property="borrowTime" column="borrow_time"/>
+        <result property="returnTime" column="return_time"/>
+        <result property="name" column="name"/>
+        <result property="roomnum" column="roomnum"/>
+    </resultMap>
+    <select id="getMyRecord" parameterType="String" resultMap="recordResultMap">
+        select u.worknum, u.name ,cr.roomnum ,ur.card_return,ur.borrow_time ,ur.return_time from use_record ur
+        join classroom cr on cr.id=ur.room_id
+        join user u on ur.user_id= u.id AND  u.worknum=#{worknum}
+    </select>
+</mapper>

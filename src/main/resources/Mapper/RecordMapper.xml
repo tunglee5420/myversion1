@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.just.myproject.Mapper.RecordMapper" >   <!--指定mapper位置-->
+    <insert id="insertBorrowRecord" parameterType="java.util.Map"  useGeneratedKeys="true" keyProperty="id">
+        insert into  use_record(borrow_time,user_id,room_id)
+          SELECT NOW(),user.id user_id , classroom.id room_id from user ,classroom where worknum=#{worknum} and roomnum=#{roomnum}
+    </insert>
+
+    <update id="changeUse" parameterType="java.util.Map">
+
+        update classroom
+        set health =#{code1},is_use =#{code}
+        where roomnum= #{roomnum}
+    </update>
+
+    <update id="reBack" parameterType="int">
+        update use_record
+        set card_return=1,return_time=NOW()
+        where id=#{id}
+    </update>
+    <insert id="insertErrorInfo" parameterType="com.just.myproject.Entity.ErrorRecord">
+        insert  into error_record(errorInfo,roomnum,date,worknum)
+        values (#{errorInfo},#{roomnum},NOW(),#{worknum})
+    </insert>
+    
+
+</mapper>   

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.just.myproject.Mapper.AdminMapper" >   <!--指定mapper位置-->
+    <insert id="importExcel" parameterType="java.util.List">
+        insert  into classtable
+        ( term, weeknum,weekday,class_order,course,user,room)
+        values
+        <foreach collection="list" item="item"  index= "index" separator =",">
+            (
+                <if test="item.term!=null">#{item.term},</if>
+                <if test="item.weeknum!=null">#{item.weeknum},</if>
+                <if test="item.weekday!=null">#{item.weekday},</if>
+                <if test="item.classOrder!=null">#{item.classOrder},</if>
+                <if test="item.course!=null">#{item.course},</if>
+                <if test="item.user!=null">#{item.user},</if>
+                <if test="item.roomnum!=null">#{item.roomnum}</if>
+            )
+        </foreach>
+    </insert>
+    <resultMap id="useRecordMap" type="java.util.Map">
+        <id property="worknum" column="worknum" />
+        <result property="schoolarea" column="schoolarea"/>
+        <result property="cardReturn" column="card_return"/>
+        <result property="borrowTime" column="borrow_time"/>
+        <result property="returnTime" column="return_time"/>
+        <result property="name" column="name"/>
+        <result property="roomnum" column="roomnum"/>
+    </resultMap>
+    <parameterMap id="conditionMap" type="java.util.Map">
+        <parameter property="worknum"/>
+        <parameter property="schoolarea"/>
+        <parameter property="cardReturn"/>
+        <parameter property="borrowTime"/>
+        <parameter property="returnTime"/>
+        <parameter property="roomnum"/>
+        <parameter property="name"/>
+    </parameterMap>
+    <select id="getRecords" parameterMap="conditionMap" resultMap="useRecordMap" >
+        select  * from  Record
+        <where>
+            <if test="worknum!=''and worknum!=null">worknum=#{worknum}</if>
+            <if test="schoolarea!=''and schoolarea!=null">and schoolarea=#{schoolarea}</if>
+            <if test="roomnum!=''and roomnum!=null">and roomnum=#{roomnum}</if>
+            <if test="name!=''and name!=null">and name=#{name}</if>
+            <if test="cardReturn!=''and cardReturn!=null">and card_return=#{cardReturn}</if>
+            <if test="borrowTime!=''and borrowTime!=null">and borrow_time &gt;#{borrowTime}</if>
+            <if test="returnTime!=''and returnTime!=null">and return_time &lt;#{returnTime}</if>
+        </where>
+    </select>
+
+    <insert id="importCalander" parameterType="java.util.List">
+        INSERT  into school_calander
+        (date,weeknum,weekday,term)
+        values
+        <foreach collection="list" item="item"  index= "index" separator =",">
+            (
+                <if test="item.date!=null">#{item.date},</if>
+                <if test="item.weeknum!=null">#{item.weeknum},</if>
+                <if test="item.weekday!=null">#{item.weekday},</if>
+                <if test="item.term!=null">#{item.term}</if>
+            )
+        </foreach>
+    </insert>
+
+</mapper>
